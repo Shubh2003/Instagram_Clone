@@ -1,5 +1,11 @@
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:instaclone/resources/auth_methods.dart';
+import 'package:instaclone/utils/utils.dart';
 import '../utils/colors.dart';
 import '../widgets/text_field_input.dart';
 
@@ -15,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -23,6 +30,12 @@ class _SignupScreenState extends State<SignupScreen> {
     _passwordController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
+  }
+  void selectImage()async{
+   Uint8List im =  await pickImage(ImageSource.gallery);
+   setState(() {
+     _image = im;
+   });
   }
 
   @override
@@ -51,20 +64,28 @@ class _SignupScreenState extends State<SignupScreen> {
 
               //circular widget to show accept and show our selected files
 
-              Stack(children: [
-                CircleAvatar(
-                  radius: 64,
-                  backgroundImage: NetworkImage(
-                      "https://images.unsplash.com/photo-1681983137356-d8b2bae77153?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80"),
-                ),
-                Positioned(
-                  bottom: -10,
-                  left: 80,
+              Stack(
+                children: [
+                  _image != null?
+                  CircleAvatar(
+                    radius: 64,
+                    backgroundImage: MemoryImage(_image!),
+                  )
+                  :const CircleAvatar(
+                    radius: 64,
+                    backgroundImage: NetworkImage(
+                        "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg"),
+                  ),
+                  Positioned(
+                    bottom: -10,
+                    left: 80,
                     child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add_a_photo),
-                ),),
-              ],),
+                      onPressed: selectImage,
+                      icon: const Icon(Icons.add_a_photo),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 24,
               ),
@@ -107,6 +128,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
               // button login
               InkWell(
+                onTap: () async {
+                  String res = await AuthMethods().signUpUser(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                      username: _usernameController.text,
+                      bio: _bioController.text,
+                      );
+                      print(res);
+                },
                 child: Container(
                   child: const Text('Log in'),
                   width: double.infinity,
