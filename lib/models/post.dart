@@ -1,54 +1,48 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
   final String description;
   final String uid;
   final String username;
+  final likes;
   final String postId;
-  final  datePublished;
+  final DateTime datePublished;
   final String postUrl;
   final String profImage;
-  final likes;
-
 
   const Post({
     required this.description,
     required this.uid,
     required this.username,
+    required this.likes,
     required this.postId,
     required this.datePublished,
     required this.postUrl,
     required this.profImage,
-    required this.likes,
   });
-
-
-  Map<String,dynamic> toJson()=> {
-    "description": description,
-    "username": username,
-    "uid": uid,
-    "postId": postId,
-    "datePublished": datePublished,
-    "postUrl": postUrl,
-    "profImage": profImage,
-    "likes": postUrl,
-  };
-
-  static Post fromSnap(DocumentSnapshot snap){
-    var snapshot = snap.data() as Map<String,dynamic>;
-
-  return Post(
-    username: snapshot['username'],
-    uid: snapshot['uid'],
-    description: snapshot['description'],
-    postId: snapshot['postId'],
-    datePublished: snapshot['datePublished'],
-    profImage: snapshot['profImage'],
-    likes: snapshot['Likes'],
-    postUrl: snapshot['postUrl'],
-    
-  );
+  static Post fromSnap(DocumentSnapshot snap) {
+    var snapshot = snap.data() as Map<String, dynamic>;
+    return Post(
+      description: snapshot["description"],
+      uid: snapshot["uid"],
+      likes: snapshot["likes"],
+      postId: snapshot["postId"],
+      datePublished: snapshot["datePublished"],
+      username: snapshot["username"],
+      postUrl: snapshot["postUrl"],
+      profImage: snapshot["profImage"],
+    );
   }
+
+  Map<String, dynamic> toJson() => {
+        "description": description,
+        "uid": uid,
+        "likes": likes,
+        "username": username,
+        "postId": postId,
+        "datePublished": datePublished,
+        "postUrl": postUrl,
+        "profImage": profImage,
+        
+      };
 }

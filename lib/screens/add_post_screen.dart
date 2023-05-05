@@ -109,15 +109,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final User user = Provider.of<UserProvider>(context).getUser;
-    return _file == null
-        ? Center(
+    final User user  = Provider.of<UserProvider>(context).getUser;
+    return _file == null? Center(
             child: IconButton(
               onPressed: () => _selectImage(context),
               icon: const Icon(Icons.upload),
             ),
-          )
-        : Scaffold(
+          ): Scaffold(
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
               leading: IconButton(
@@ -127,7 +125,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
               title: const Text('Post to'),
               centerTitle: false,
               actions: [
-                TextButton(
+                   TextButton(
                     onPressed: () =>
                         postImage(user.uid, user.username, user.photoUrl),
                     child: const Text(
@@ -153,7 +151,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   children: [
                     CircleAvatar(
                       backgroundImage: NetworkImage(
-                        user.photoUrl,
+                       user.photoUrl ?? "https://images.unsplash.com/photo-1682687982141-0143020ed57a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwzfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=1000&q=60" ,
                       ),
                     ),
                     SizedBox(
@@ -175,9 +173,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         child: Container(
                           decoration: BoxDecoration(
                               image: DecorationImage(
+                                fit: BoxFit.fill,
+                                 alignment: FractionalOffset.topCenter,
                             image: MemoryImage(_file!),
-                            fit: BoxFit.fill,
-                            alignment: FractionalOffset.topCenter,
+                            
+                           
                           )),
                         ),
                       ),
